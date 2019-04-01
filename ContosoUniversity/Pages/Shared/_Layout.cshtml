@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="https://fonts.googleapis.com/css?family=Cardo:400,700|Oswald" rel="stylesheet">
     <title>@ViewData["Title"] - Contoso University</title>
 
     <environment include="Development">
@@ -19,7 +20,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3" style="font-family: Oswald; color: white; background-color: black;">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">ContosoUniversity</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -60,12 +61,6 @@
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2019 - Contoso University - <a asp-area="" asp-page="/Privacy">Privacy</a>
-        </div>
-    </footer>
 
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>

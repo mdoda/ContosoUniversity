@@ -4,23 +4,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ContosoUniversity.Models;
 
-namespace ContosoUniversity.Pages.Students
+namespace ContosoUniversity.Pages.Courses
 {
-    public class EditModel : PageModel
+    public class DeleteModel : PageModel
     {
         private readonly ContosoUniversity.Models.SchoolContext _context;
 
-        public EditModel(ContosoUniversity.Models.SchoolContext context)
+        public DeleteModel(ContosoUniversity.Models.SchoolContext context)
         {
             _context = context;
         }
 
         [BindProperty]
-        public Student Student { get; set; }
+        public Course Course { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -29,9 +28,12 @@ namespace ContosoUniversity.Pages.Students
                 return NotFound();
             }
 
-            Student = await _context.Student.FindAsync(id);
+            Course = await _context.Courses
+                .AsNoTracking()
+                .Include(c => c.Department)
+                .FirstOrDefaultAsync(m => m.CourseID == id);
 
-            if (Student == null)
+            if (Course == null)
             {
                 return NotFound();
             }
@@ -40,28 +42,22 @@ namespace ContosoUniversity.Pages.Students
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (!ModelState.IsValid)
+            if (id == null)
             {
-                return Page();
+                return NotFound();
             }
 
-            var studentToUpdate = await _context.Student.FindAsync(id);
+            Course = await _context.Courses
+                 .AsNoTracking()
+                 .FirstOrDefaultAsync(m => m.CourseID == id);
 
-            if (await TryUpdateModelAsync<Student>(
-                studentToUpdate,
-                "student",
-                s => s.FirstMidName, s => s.LastName, s => s.EnrollmentDate))
+            if (Course != null)
             {
+                _context.Courses.Remove(Course);
                 await _context.SaveChangesAsync();
-                return RedirectToPage("./Index");
             }
 
-            return Page();
-        }
-
-        private bool StudentExists(int id)
-        {
-            return _context.Student.Any(e => e.ID == id);
+            return RedirectToPage("./Index");
         }
     }
 }
